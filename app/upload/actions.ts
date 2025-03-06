@@ -2,7 +2,7 @@
 
 import { sql } from "@vercel/postgres";
 // import formidable from "formidable";
-import { readFileSync } from "fs";
+// import { readFileSync } from "fs";
 
 export async function uploadFile(formData: FormData) {
   const file = formData.get("file") as File;
