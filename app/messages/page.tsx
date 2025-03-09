@@ -12,7 +12,7 @@ export default async function MessagesPage() {
       ) : (
         <>
           {rows.map((row: QueryResultRow) => (
-            <div key={row.id}>
+            <div key={row.id} className="mt-4 bg-gray-400 flex flex-col">
               <p>{new Date(row.timestamp).toLocaleString()}</p>
               <p className="text-red-300">{row.chatid}</p>
               <p className="text-red-300">{row.sender}</p>
