@@ -1,4 +1,12 @@
 import { QueryResultRow, sql } from "@vercel/postgres";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default async function MessagesPage() {
   // Fetch messages from the database
@@ -12,11 +20,20 @@ export default async function MessagesPage() {
       ) : (
         <>
           {rows.map((row: QueryResultRow) => (
-            <div key={row.id} className="mt-4 bg-gray-400 flex flex-col">
-              <p>{new Date(row.timestamp).toLocaleString()}</p>
-              <p className="text-red-300">{row.chatid}</p>
-              <p className="text-red-300">{row.sender}</p>
-              <p className="text-red-300">{row.message}</p>
+            <div key={row.id} className="mt-4 bg-gray-800 flex flex-col">
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    {new Date(row.timestamp).toLocaleString()}
+                  </CardTitle>
+                  <CardDescription>Message {row.chatid}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-red-300">{row.sender}</p>
+                  <p className="text-red-300">{row.message}</p>
+                </CardContent>
+                <CardFooter>EOF</CardFooter>
+              </Card>
             </div>
           ))}
         </>
