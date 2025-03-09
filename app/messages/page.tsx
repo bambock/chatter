@@ -10,28 +10,16 @@ export default async function MessagesPage() {
       {rows.length === 0 ? (
         <p>No messages found.</p>
       ) : (
-        <table style={{ borderCollapse: "collapse", width: "100%" }}>
-          <thead>
-            <tr>
-              <th style={{ border: "1px solid #ddd", padding: "8px" }}>Timestamp</th>
-              <th style={{ border: "1px solid #ddd", padding: "8px" }}>Chat ID</th>
-              <th style={{ border: "1px solid #ddd", padding: "8px" }}>Sender</th>
-              <th style={{ border: "1px solid #ddd", padding: "8px" }}>Message</th>
-            </tr>
-          </thead>
-          <tbody>
             {rows.map((row) => (
-              <tr key={row.id}>
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+              <div key={row.id}>
+                <p>
                   {new Date(row.timestamp).toLocaleString()}
-                </td>
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{row.chatid}</td>
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{row.sender}</td>
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{row.message}</td>
-              </tr>
+                </p>
+                <p className="text-red-300">{row.chatid}</p>
+                <p className="text-red-300">{row.sender}</p>
+                <p className="text-red-300">{row.message}</p>
+              </div>
             ))}
-          </tbody>
-        </table>
       )}
     </div>
   );
