@@ -18,9 +18,9 @@ export default async function MessagesPage() {
       {rows.length === 0 ? (
         <p>No messages found.</p>
       ) : (
-        <div className="mt-4 bg-gray-800 flex flex-col">
+        <div className="mt-4">
           {rows.map((row: QueryResultRow) => (
-            <Card key={row.id}>
+            <Card key={row.id} className="m-3 bg-gray-300">
               <CardHeader>
                 <CardTitle>
                   {new Date(row.timestamp).toLocaleString()}
