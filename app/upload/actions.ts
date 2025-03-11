@@ -29,7 +29,7 @@ export async function uploadFile(formData: FormData) {
 
     // Insert into database
     await sql`
-      INSERT INTO messages (timestamp, chatid, sender, message)
+      INSERT INTO messages (timestamp, chat_id, channel_name, sender_alias, message)
       VALUES (${content.timestamp}, ${content.chat_id}, ${content.channel_name}, ${content.sender_alias}, ${content.message})
     `;
 
