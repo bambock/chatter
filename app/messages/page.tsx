@@ -16,8 +16,10 @@ export default async function MessagesPage() {
     <div className="m-4">
       <h1>Chat Messages</h1>
       {rows.length === 0 ? (
-        <p>No messages found.</p>
-        <p>{rows}</p>
+        <>
+          <p>No messages found.</p>
+          <p>{rows.toString()}</p>
+        </>
       ) : (
         <div className="mt-4">
           {rows.map((row: QueryResultRow) => (
