@@ -1,8 +1,14 @@
 "use server";
 
 import { sql } from "@vercel/postgres";
-// import formidable from "formidable";
-// import { readFileSync } from "fs";
+
+interface MessageContent {
+  timestamp: string;
+  chat_id: string;
+  channel_name: string;
+  sender_alias: string;
+  message: string;
+}
 
 export async function uploadFile(formData: FormData) {
   const file = formData.get("file") as File;
@@ -11,31 +17,59 @@ export async function uploadFile(formData: FormData) {
     return { error: "No file uploaded" };
   }
 
-  // Parse the file (assuming it’s JSON)
   try {
     const buffer = Buffer.from(await file.arrayBuffer());
-    const content = JSON.parse(buffer.toString("utf-8"));
+    const content: MessageContent[] = JSON.parse(buffer.toString("utf-8"));
 
-    // Validate the content structure
-    if (
-      !content.timestamp ||
-      !content.chat_id ||
-      !content.channel_name ||
-      !content.sender_alias ||
-      !content.message
-    ) {
-      return { error: "File missing required fields" };
+    if (!Array.isArray(content)) {
+      return { error: "JSON must be an array of messages" };
     }
 
-    // Insert into database
-    await sql`
-      INSERT INTO messages (timestamp, chat_id, channel_name, sender_alias, message)
-      VALUES (${content.timestamp}, ${content.chat_id}, ${content.channel_name}, ${content.sender_alias}, ${content.message})
-    `;
+    let successCount = 0;
+    const errors: string[] = [];
 
-    return { success: true };
+    for (const message of content) {
+      if (!message.timestamp || 
+          !message.chat_id || 
+          !message.channel_name || 
+          !message.sender_alias || 
+          !message.message) {
+        errors.push(`Invalid message at timestamp ${message.timestamp || 'unknown'}: missing fields`);
+        continue;
+      }
+
+      try {
+        await sql`
+          INSERT INTO messages (timestamp, chat_id, channel_name, sender_alias, message)
+          VALUES ($1, $2, $3, $4, $5)
+        `.values([
+          message.timestamp,
+          message.chat_id,
+          message.channel_name,
+          message.sender_alias,
+          message.message
+        ]);
+        successCount++;
+      } catch (dbError) {
+        errors.push(`Failed to insert message at timestamp ${message.timestamp}: ${dbError}`);
+      }
+    }
+
+    if (successCount === content.length) {
+      return { success: true, count: successCount };
+    } else {
+      return { 
+        success: false,
+        count: successCount,
+        errors: errors
+      };
+    }
+
   } catch (error) {
-    console.error(error);
-    return { error: "Failed to process file or store data" };
+    console.error("Failed to process upload:", error);
+    return { 
+      error: "Failed to process file",
+      details: error instanceof Error ? error.message : String(error)
+    };
   }
 }
