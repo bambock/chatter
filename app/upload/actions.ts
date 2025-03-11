@@ -17,14 +17,20 @@ export async function uploadFile(formData: FormData) {
     const content = JSON.parse(buffer.toString("utf-8"));
 
     // Validate the content structure
-    if (!content.timestamp || !content.chatid || !content.sender || !content.message) {
+    if (
+      !content.timestamp ||
+      !content.chat_id ||
+      !content.channel_name ||
+      !content.sender_alias ||
+      !content.message
+    ) {
       return { error: "File missing required fields" };
     }
 
     // Insert into database
     await sql`
       INSERT INTO messages (timestamp, chatid, sender, message)
-      VALUES (${content.timestamp}, ${content.chatid}, ${content.sender}, ${content.message})
+      VALUES (${content.timestamp}, ${content.chat_id}, ${content.channel_name}, ${content.sender_alias}, ${content.message})
     `;
 
     return { success: true };

@@ -25,10 +25,11 @@ export default async function MessagesPage() {
                 <CardTitle>
                   {new Date(row.timestamp).toLocaleString()}
                 </CardTitle>
-                <CardDescription>Message {row.chatid}</CardDescription>
+                <CardDescription>Message {row.chat_id}</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-red-300">{row.sender}</p>
+                <p className="text-red-300">{row.channel_name}</p>
+                <p className="text-red-300">{row.sender_alias}</p>
                 <p className="text-red-300">{row.message}</p>
               </CardContent>
               <CardFooter>EOF</CardFooter>
